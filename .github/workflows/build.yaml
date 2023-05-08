@@ -8,7 +8,7 @@ on:
 jobs:
   Plswork:
     runs-on: ubuntu-latest
-    if: "!StartsWith(github.event.head_commit.message, '#NORUN')"
+    if: StartsWith(github.event.head_commit.message, '#NORUN') != true
 
     steps:
       - name: Checkout
@@ -17,12 +17,72 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-         node-version: 16
-
-      - name: Install Railway cli
+         node-version: 18
+      
+      - name: Install Railway
         run: npm i -g @railway/cli
 
       - name: Deploy to Railway
-        run: railway up
+        run: railway up --service dov-bear-CICD
         env:
-          RALWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN1 }}
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+
+      - name: Send Slack Notification
+        id: slack
+        uses: slackapi/slack-github-action@v1.23.0
+        with: 
+          payload: |
+            {
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "DipSA 56 CI/CD Submission",
+                  "emoji": true
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Name*: Gabriel Pik Liang MARINI"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Email*: E1114406@u.nus.edu"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Matriculation*: A0112995X"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Repository*:\n${{ github.server_url }}/${{ github.repository }} "
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${{ secrets.RAILWAY_URL }}"
+                },
+                "accessory": {
+                  "type": "button",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "GO",
+                    "emoji": true
+                  },
+                  "url": "${{ secrets.RAILWAY_URL }}"
+                }
+              }
+            ]
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+
+###
