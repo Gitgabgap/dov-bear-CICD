@@ -30,60 +30,57 @@ jobs:
       - name: Send Slack Notification
         id: slack
         uses: slackapi/slack-github-action@v1.23.0
-        with:
+        with: 
           payload: |
             {
-              "blocks": [
-                {
-                  "type": "header",
-                  "text": {
+            "blocks": [
+              {
+                "type": "header",
+                "text": {
                   "type": "plain_text",
                   "text": "G.DipSA 56 CI/CD Submission",
                   "emoji": true
                 }
-            },
-            {
-              "type": "section",
-                      "fields": [
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Name:* Gabriel Pik Liang Marini"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Email: E1114406@u.nus.edu*"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Metriculation:* A0112995X"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "*Repository:* ${{ https://github.com/Gitgabgap/dov-bear-CICD }}"
-                          },
-                          {
-                            "type": "mrkdwn",
-                            "text": "${{ secrets.SECRET_DEPLOYMENT_URL }}"
-                          }
-                        ]
-                      },
-                      {
-                        "type": "section",
-                        "text": {
-                          "type": "plain_text",
-                          "text": " "
-                        },
-                        "accessory": {
-                          "type": "button",
-                          "text": {
-                            "type": "plain_text",
-                            "text": "GO"
-                          },
-                          "url": "${{ secrets.RAILWAY_URL }}"
-                        }
-                      }
-                    ]
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Name*: Gabriel Pik Liang MARINI"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Email*: E1114406@u.nus.edu"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Matriculation*: A0112995X"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Repository*:\n${{ github.server_url }}/${{ github.repository }} "
                   }
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "${{ secrets.RAILWAY_URL }}"
+                },
+                "accessory": {
+                  "type": "button",
+                  "text": {
+                    "type": "plain_text",
+                    "text": "GO",
+                    "emoji": true
+                  },
+                  "url": "${{ secrets.RAILWAY_URL }}"
+                }
+              }
+            ]
+            }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.TEST_SLACK_WEBHOOK }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK       
+          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK           
